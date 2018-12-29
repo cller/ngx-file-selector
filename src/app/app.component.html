@@ -17,6 +17,7 @@
       <label>测试文件</label>
       <ngx-file-selector class="form-control"
                          [(ngModel)]="files"
+                         [accpet]="'image/*'"
                          #ngModel="ngModel"
                          name="files">选择文件</ngx-file-selector>
       <div class="valid-feedback">

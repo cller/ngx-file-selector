@@ -16,7 +16,7 @@ export class NgxFileSelectorComponent implements OnInit, ControlValueAccessor {
   @Input()
   accpet = 'file/*';
   @Input()
-  multiple: boolean;
+  multiple = false;
   @Input()
   isDisabled: boolean;
 
@@ -24,11 +24,11 @@ export class NgxFileSelectorComponent implements OnInit, ControlValueAccessor {
   tabIndex = 0;
 
   @Output()
-  select = new EventEmitter<FileList>();
+  select = new EventEmitter<FileList | File>();
 
-  value: FileList;
+  value: FileList | File;
 
-  changeFn = (files: FileList) => { };
+  changeFn = (files: FileList | File) => { };
 
   touchFn = () => { };
 
@@ -55,9 +55,14 @@ export class NgxFileSelectorComponent implements OnInit, ControlValueAccessor {
 
     fromEvent(this.input, 'change').subscribe(event => {
       this.input.remove();
-      this.changeFn(this.input.files);
+      if (this.multiple) {
+        this.changeFn(this.input.files);
+        this.select.emit(this.input.files);
+      } else {
+        this.changeFn(this.input.files[0]);
+        this.select.emit(this.input.files[0]);
+      }
       this.touchFn();
-      this.select.emit(this.input.files);
       this.ngOnInit();
       const elementEl = this.elementRef.nativeElement as HTMLElement;
       elementEl.focus();
